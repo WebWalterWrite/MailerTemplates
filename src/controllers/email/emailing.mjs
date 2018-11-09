@@ -4,10 +4,12 @@ import { UserWelcome } from '../../services/mail/sendmail/sendmail';
   * @param string name, email - Valeurs pour envoyer le mail
   * @return bool - success or failure
 */
-export const WelcomeEmail = (req, res) => {
+export const WelcomeEmail = (req, res, next) => {
 
-  UserWelcome('samy', 'samy.kacemi@gmail.com')
+ 
   res.send('email envoyé');
 
 };
+
+
 
