@@ -14,9 +14,7 @@ import { isValidEmail, isValidLength, isValidEmpty } from "./validation";
 export const validateAccount = (data) => {
   let errors = {};
   
-
   let { firstname, lastname, email, password } = data;
-
 
   errors.firstname = isValidEmpty(firstname, "prenom", isValidLength);
 

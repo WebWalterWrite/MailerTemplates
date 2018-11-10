@@ -17,7 +17,7 @@ const isValidEmpty = (value, field, cb) => {
   if (validator.isEmpty(value.trim())) 
   
   return msg;
-  
+
    return cb(value, field);
 };
 
