@@ -26,11 +26,9 @@ const userCreate = async (req, res) => {
   
     /** @function */
     const hashed = await HashPwd(password);
-    console.log(typeof(hashed))
 
-    /* ici votre code d'insertion en db et cryptage du mdp */
-    /* ....code  */
-
+    /* code d'insertion en db (sql, nosql) et cryptage du mdp */
+    
     // envoi du mail de bienvenue
     UserWelcome(firstname, email);
   }

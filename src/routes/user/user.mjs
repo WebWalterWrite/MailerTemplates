@@ -9,4 +9,6 @@ import { userCreate } from '../../controllers/crud/user'
 router.post('/user/create',userCreate);
 
 
+router.post('/user/password/forgot',)
+
 export default router;
