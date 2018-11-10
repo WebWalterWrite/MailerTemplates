@@ -10,7 +10,7 @@ import emailer from '../config';
 */
 
 export const UserWelcome = (name, email) => {
-
+    
     emailer.sendMail({
         to: email,
         subject:`${name} bienvenue à toi`,
@@ -18,6 +18,8 @@ export const UserWelcome = (name, email) => {
         context:{
             name: name
         }
-
-    })
+    }), (err, info) => {
+        console.log(info.envelope);
+        console.log(info.messageId);
+    }
 }
