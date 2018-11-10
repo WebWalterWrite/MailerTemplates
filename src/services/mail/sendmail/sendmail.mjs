@@ -8,7 +8,6 @@ import emailer from '../config';
 */
 export const UserWelcome = (name, email) => {
 
-    console.log(email)
     emailer.sendMail({
         to: email,
         subject:`${name} bienvenue à toi`,
