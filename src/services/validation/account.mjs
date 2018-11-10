@@ -1,66 +1,37 @@
-import validator from "validator";
-import { isEmpty } from "./isEmpty";
+import validator from 'validator';
+import { isValidEmail, isValidLength, isValidEmpty } from "./validation";
 
-
-/*
-Validateurs
-
-isEmpty : vérifie si aucun champ n'est vide
-iValidLength: Vérifie si le nb de caractères requis est respecté.
-...
-*/
-const isValidEmpty = (value, field) => {
-    if (validator.isEmpty(value))
-        return `Le champ ${field} doit être rempli`;
-};
-
-const isValidLength = (value, field) => {
-  if (!validator.isLength(value, { min: 2, max: 30 }))
-    return `Le champ ${field} doit être contenir entre 2 et 30 caractères`;
-};
-
-
-
-/*
-
-Validation globale du formulaire
-
+/**
+  * @desc Controler les champs de formulaire
+  * @param {string} firstname - champ de formulaire
+  * @param {string} lastname  - champ de formulaire
+  * @param {string} email - champ de formulaire
+  * @param {string} password - champ de formulaire
+  * @callback 
+  * @return {array} - tableau d'objets
 */
 
-export const validateAccount = data => {
+export const validateAccount = (data) => {
   let errors = {};
+  
 
   let { firstname, lastname, email, password } = data;
 
-  
-  firstname = !isEmpty(firstname) ? firstname : "";
-  lastname = !isEmpty(lastname) ? lastname : "";
-  email = !isEmpty(email) ? email : "";
-  password = !isEmpty(password) ? password : "";
 
-  
-  
-  // Vérifier les champs.
-  errors.firstname = {
-      empty: isValidEmpty(firstname,"prénom"),
-      length: isValidLength(firstname, "prénom"),
-  };
-  
-  errors.lastname ={ 
-      empty: isValidEmpty(lastname,"nom"),
-      length:isValidLength(lastname, "nom")
-    };
+  errors.firstname = isValidEmpty(firstname, "prenom", isValidLength);
 
-  errors.email = {
-      empty: isValidEmpty(email, "email"),
-      length:isValidLength(email, "email")
-    };
+//   errors.lastname = isValidEmpty(lastname, "nom", isValidLength);
 
-  errors.password = {
-      empty: isValidEmpty(password, "mot de passe"),
-      length:isValidLength(password, "mot de passe")
-    };
+//   errors.email = isValidEmpty(email, "email", isValidEmail);
 
-    // test
-    console.log(errors)
+//   errors.password = isValidEmpty(password, "mot de passe", isValidLength);
+
+  // Retourne un array de - errors -
+  const Errors = Object.values(errors);
+
+  // La valeur de nos entrées Errors ne doivent pas être undefined
+  const isError = entry => entry !== undefined;
+
+  // Renvoi un array vide ou avec les erreurs
+  return Errors.filter(isError);
 };
