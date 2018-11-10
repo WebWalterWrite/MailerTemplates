@@ -11,17 +11,12 @@ isValidEmail : Vérifie la structure de l'addresse mail
 */
 
 const isValidEmpty = (value, field, cb) => {
-
   let msg = { [field]: `Le champ ${field} doit être rempli` };
-  
-  if (validator.isEmpty(value.trim())) 
-  
-  return msg;
 
-   return cb(value, field);
+  if (validator.isEmpty(value.trim())) return msg;
+
+  return cb(value, field);
 };
-
-
 
 const isValidLength = (value, field) => {
   let msg = {
@@ -39,5 +34,4 @@ const isValidEmail = (value, field) => {
   if (!validator.isEmail(value)) return msg;
 };
 
-
-export {isValidEmail, isValidEmpty, isValidLength };
+export { isValidEmail, isValidEmpty, isValidLength };
