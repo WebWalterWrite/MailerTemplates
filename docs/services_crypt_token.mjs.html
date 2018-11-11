@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: services/mail/sendmail/sendmail.mjs</title>
+    <title>JSDoc: Source: services/crypt/token.mjs</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: services/mail/sendmail/sendmail.mjs</h1>
+    <h1 class="page-title">Source: services/crypt/token.mjs</h1>
 
     
 
@@ -26,56 +26,20 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import emailer from "../config";
+            <pre class="prettyprint source linenums"><code>import RandomString from "randomstring";
+import Crypto from "crypto";
 
 /**
- * @desc envoi mail de bienvenue
- * @func UserWelcome
- * @param {string} name - nom de l'utilisateur
- * @param {string} email - adresse mail destinataire
- * @return bool - success or failure
+ * @desc créer un token pour url de réinitialisation de mot de passe
+ * @func token
+ * @returns {string}
  */
 
-export const userWelcome = (name, email) => {
-	emailer.sendMail({
-		to: email,
-		subject: `${name} bienvenue à toi`,
-		template: "welcome",
-		context: {
-			name: name
-		}
-	}),
-		(err, info) => {
-			if (err) throw err;
-			console.log(info.envelope);
-			console.log(info.messageId);
-		};
-};
+export const token = async () => {
+	const hash = Crypto.createHash("sha256");
+	const string = RandomString.generate(8);
 
-/**
- * @desc envoi mail de bienvenue
- * @func UserPwdForgot
- * @param {string} name - nom de l'utilisateur
- * @param {string} email - adresse mail destinataire
- * @param {string} token - token vérification
- * @return bool - success or failure
- */
-
-export const userPwdForgot = (name, email, token) => {
-	emailer.sendMail({
-		to: email,
-		subject: "Réinitialisation du mot de passe",
-		template: "forgot",
-		context: {
-			name: name,
-			token: token
-		}
-	}),
-		(err, info) => {
-			if (err) throw err;
-			console.log(info.envelope);
-			console.log(info.messageId);
-		};
+	return await hash.update(string).digest("hex");
 };
 </code></pre>
         </article>
