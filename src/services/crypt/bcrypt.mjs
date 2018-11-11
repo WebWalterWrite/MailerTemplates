@@ -9,7 +9,7 @@ const saltRounds = 10;
  * @return {Promise<string>}  - Le mot de passe crypté.
  */
 
-export const HashPwd = async PlaintextPassword => {
+export const hashPwd = async PlaintextPassword => {
 	
 	try{
 	const Hashed = await bCrypt.hash(PlaintextPassword, saltRounds);
@@ -30,8 +30,8 @@ export const HashPwd = async PlaintextPassword => {
  * @return {boolean} 
  */
 
- export const ComparePwd = async (PlaintextPassword, passwordHash) => {
-	const isMatch = await bcrypt.compare(PlaintextPassword, passwordHash);
+ export const comparePwd = async (PlaintextPassword, passwordHash) => {
+	const isMatch = await bCrypt.compare(PlaintextPassword, passwordHash);
 	return isMatch;
  };
 

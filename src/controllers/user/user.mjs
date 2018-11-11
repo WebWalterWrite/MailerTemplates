@@ -1,7 +1,6 @@
-import { UserPwdForgot } from '../../services/mail/sendmail/sendmail';
+import { userPwdForgot } from '../../services/mail/sendmail/sendmail';
 
-
-const PwdForgot = email => {
+export const pwdForgot = async (req, res) => {
 
 };
 

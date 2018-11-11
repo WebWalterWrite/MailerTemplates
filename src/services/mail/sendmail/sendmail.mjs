@@ -8,7 +8,7 @@ import emailer from "../config";
  * @return bool - success or failure
  */
 
-export const UserWelcome = (name, email) => {
+export const userWelcome = (name, email) => {
 	emailer.sendMail({
 		to: email,
 		subject: `${name} bienvenue à toi`,
@@ -33,7 +33,7 @@ export const UserWelcome = (name, email) => {
  * @return bool - success or failure
  */
 
-export const UserPwdForgot = (name, email, token) => {
+export const userPwdForgot = (name, email, token) => {
 	emailer.sendMail({
 		to: email,
 		subject: "Réinitialisation du mot de passe",

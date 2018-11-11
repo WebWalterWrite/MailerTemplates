@@ -1,6 +1,6 @@
 import { validateAccount } from "../../services/validation/account";
-import { UserWelcome } from "../../services/mail/sendmail/sendmail";
-import { HashPwd } from '../../services/crypt/bcrypt.mjs';
+import { userWelcome } from "../../services/mail/sendmail/sendmail";
+import { hashPwd } from '../../services/crypt/bcrypt.mjs';
 
 /**
   @desc Recupére le formulaire et transmet celui-ci à la fonction validataaccount
@@ -25,12 +25,12 @@ const userCreate = async (req, res) => {
     
   
     /** @function */
-    const hashed = await HashPwd(password);
-
+    const hashed = await hashPwd(password);
+    console.log(hashed)
     /* code d'insertion en db (sql, nosql) et cryptage du mdp */
     
     // envoi du mail de bienvenue
-    UserWelcome(firstname, email);
+    //UserWelcome(firstname, email);
   }
 };
 
