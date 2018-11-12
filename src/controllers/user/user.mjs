@@ -1,10 +1,16 @@
 import { userPwdForgot } from '../../services/mail/sendmail/sendmail';
 import { findUser } from '../../models/querying/userQuery';
 import { token } from '../../services/crypt/token' ;
+import {isValidEmail } from '../../services/validation/validation';
 
 export const pwdForgot = async (req, res) => {
     try{
         let {email} = req.body;
+        
+        const error = await isValidEmail(email,'email');
+
+        if(error)
+        return res.json(error)
 
         // vérifier si l'émail existe
         const ifUser = await findUser(email, 'email', 'firstname')
@@ -15,7 +21,7 @@ export const pwdForgot = async (req, res) => {
             
             // insérer le token en bdd
             /* code code */
-            
+
             // envoyer le mail
             let { user } = ifUser;
             const isSend = await userPwdForgot(user,email, key)
