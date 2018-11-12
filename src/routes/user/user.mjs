@@ -1,6 +1,5 @@
 import router from '../config';
 import { userCreate } from '../../controllers/crud/user';
-import { pwdForgot} from '../../controllers/user/user';
 
 
 /**
@@ -9,10 +8,7 @@ import { pwdForgot} from '../../controllers/user/user';
 router.post('/user/create',userCreate);
 
 
-/**
-  @desc envoi mail de réinitianilisation du mdp
-*/
-router.post('/user/password/forgot', pwdForgot)
+
 
 
 export default router;
