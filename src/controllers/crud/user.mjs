@@ -1,7 +1,7 @@
 import { validateAccount } from "../../services/validation/account";
 import { userWelcome } from "../../services/mail/sendmail/sendmail";
-import { hashPwd } from '../../services/crypt/bcrypt.mjs';
-import User from '../../models/user';
+import { hashPwd } from "../../services/crypt/bcrypt.mjs";
+import { createUser, findUser } from "../../models/querying/userQuery";
 /**
   @desc Recupére le formulaire et transmet celui-ci à la fonction validataaccount
   @func validateAccount - Traite les entrées du formulaires
@@ -14,33 +14,28 @@ import User from '../../models/user';
 */
 
 const userCreate = async (req, res) => {
-  const errors = validateAccount(req.body);
+	const errors = validateAccount(req.body);
 
-  if (errors.length !== 0) {
-    res.status(400).json(errors);
-  } else {
+	if (errors.length !== 0) return res.status(400).json(errors);
 
-    // données du formulaire
+  const isUser = await findUser(req.body.email, 'email');
+
+// Vérifier si email utilisateur existe déjà 
+	if (isUser){
+    let msg= { errors: 'Cet émail existe déjà.' }
+		return res.json(msg); // renvoyer 
+  } 
+// Créer utilisateur
+  else {
     const { firstname, lastname, email, password } = req.body;
-  
-    /** @function */
-    const hashed = await hashPwd(password);
-    
-    // créer le user
-    User.create({
-        firstname: firstname,
-        lastname: lastname,
-        email: email,
-        password: hashed
+    const hashed = await hashPwd(password); // hasher le mot de passe
+
+    createUser(firstname, lastname, email, hashed)
+    .then( user => {
+      userWelcome(firstname, email) // envoyer email de bienvenue
+      res.json(user);
     })
-    .then( ({firstname,email}) => {
-
-      userWelcome(firstname, email);
-      res.json({ user: firstname})
-    });
-
-   
-  }
+	}
 };
 
 export { userCreate };
