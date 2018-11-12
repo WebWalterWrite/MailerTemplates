@@ -11,19 +11,18 @@ import User from "../user";
  */
 
 const createUser = async (firstname, lastname, email, password) => {
-	try {
-		const user = await User.create({
-			firstname: firstname,
-			lastname: lastname,
-			email: email,
-			password: password
-		});
-        return { user: firstname };
-        
-	} catch (err) {
-		throw err;
-		console.error(err);
-	}
+  try {
+    const user = await User.create({
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      password: password
+    });
+    return { user: firstname };
+  } catch (err) {
+    throw err;
+    console.error(err);
+  }
 };
 
 /**
@@ -34,17 +33,23 @@ const createUser = async (firstname, lastname, email, password) => {
  * @return {boolean} - true or false
  */
 
-const findUser = async (data, field) => {
-	try {
-		const user = await User.findOne({ where: { [field]: data } });
-
-        if (user) 
-        return true;
-		return false;
-	} catch (err) {
-		throw err;
-		console.error(err);
-	}
+const findUser = async (data, field, target) => {
+  console.log(data);
+  try {
+    const user = await User.findOne({
+      where: { [field]: data },
+      attributes: [target]
+    });
+    if (user) {
+	const {firstname} = user.dataValues;
+      return {user:firstname};
+    } else {
+      return false;
+    }
+  } catch (err) {
+    throw err;
+    console.error(err);
+  }
 };
 
 export { createUser, findUser };
