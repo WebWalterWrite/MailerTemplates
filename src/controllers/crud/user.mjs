@@ -18,7 +18,7 @@ const userCreate = async (req, res) => {
 
 	if (errors.length !== 0) return res.status(400).json(errors);
 
-  const isUser = await findUser(req.body.email, 'email');
+  const isUser = await findUser(req.body.email, 'email', 'firstname');
 
 // Vérifier si email utilisateur existe déjà 
 	if (isUser){
