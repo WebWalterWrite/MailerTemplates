@@ -557,6 +557,412 @@
     
 
     
+    <h4 class="name" id="createUser"><span class="type-signature"></span>createUser<span class="signature">(firstname, lastname, email, password)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Créer un utilisateur
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>firstname</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">prénom de l'utilisateur</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>lastname</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">nom de l'utilisateur</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>email</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">email utilisateur</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>password</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">mot de passe utilisateur</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_querying_userQuery.mjs.html">models/querying/userQuery.mjs</a>, <a href="models_querying_userQuery.mjs.html#line3">line 3</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - prénom utilisateur
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="findUser"><span class="type-signature"></span>findUser<span class="signature">(data, field)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Récupérer un utilisateur
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">nom de l'utilisateur</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>field</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">le champ en base de donnée</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="models_querying_userQuery.mjs.html">models/querying/userQuery.mjs</a>, <a href="models_querying_userQuery.mjs.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - true or false
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="HashPwd"><span class="type-signature"></span>HashPwd<span class="signature">(PlaintextPassword)</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span></h4>
     
 
@@ -714,7 +1120,7 @@
     
 
     
-    <h4 class="name" id="HashPwd-Crypterlemotdepasse"><span class="type-signature"></span>HashPwd - Crypter le mot de passe<span class="signature">(firstanme, email, password)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="HashPwd-Crypterlemotdepasse"><span class="type-signature"></span>HashPwd - Crypter le mot de passe<span class="signature">(firstname, email, password)</span><span class="type-signature"></span></h4>
     
 
     
@@ -781,7 +1187,7 @@
 
         <tr>
             
-                <td class="name"><code>firstanme</code></td>
+                <td class="name"><code>firstname</code></td>
             
 
             <td class="type">
@@ -1457,13 +1863,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ComparePwd">ComparePwd</a></li><li><a href="global.html#credentials">credentials</a></li><li><a href="global.html#HashPwd">HashPwd</a></li><li><a href="global.html#HashPwd-Crypterlemotdepasse">HashPwd - Crypter le mot de passe</a></li><li><a href="global.html#token">token</a></li><li><a href="global.html#UserPwdForgot">UserPwdForgot</a></li><li><a href="global.html#UserWelcome">UserWelcome</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#ComparePwd">ComparePwd</a></li><li><a href="global.html#createUser">createUser</a></li><li><a href="global.html#credentials">credentials</a></li><li><a href="global.html#findUser">findUser</a></li><li><a href="global.html#HashPwd">HashPwd</a></li><li><a href="global.html#HashPwd-Crypterlemotdepasse">HashPwd - Crypter le mot de passe</a></li><li><a href="global.html#token">token</a></li><li><a href="global.html#UserPwdForgot">UserPwdForgot</a></li><li><a href="global.html#UserWelcome">UserWelcome</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Nov 11 2018 16:07:11 GMT+0100 (GMT+01:00)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Nov 12 2018 18:28:36 GMT+0100 (GMT+01:00)
 </footer>
 
 <script> prettyPrint(); </script>
