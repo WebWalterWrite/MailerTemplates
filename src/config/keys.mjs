@@ -13,7 +13,8 @@ const key={
     sqlz:{
         DB: process.env.SQLZ_DB,
         USER: process.env.SQLZ_USER,
-        PWD: process.env.SQLZ_PASSWORD
+        PWD: process.env.SQLZ_PASSWORD,
+        PORT: process.env.SQLZ_PORT
     }
 } ;
 
