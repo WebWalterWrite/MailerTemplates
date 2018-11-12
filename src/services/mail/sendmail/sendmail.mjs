@@ -2,50 +2,37 @@ import emailer from "../config";
 
 /**
  * @desc envoi mail de bienvenue
- * @func UserWelcome
- * @param {string} name - nom de l'utilisateur
- * @param {string} email - adresse mail destinataire
- * @return bool - success or failure
+ * @param {string} name, email - Valeurs pour envoyer le mail
+ * @return {bool} - success or failure
  */
-
-export const userWelcome = (name, email) => {
-	emailer.sendMail({
-		to: email,
-		subject: `${name} bienvenue à toi`,
-		template: "welcome",
-		context: {
-			name: name
-		}
-	}),
-		(err, info) => {
-			if (err) throw err;
-			console.log(info.envelope);
-			console.log(info.messageId);
-		};
+const userWelcome = (name, email) => {
+  console.log(email);
+  emailer.sendMail({
+    to: email,
+    subject: `${name} bienvenue à toi`,
+    template: "welcome",
+    context: {
+      name: name
+    }
+  });
 };
 
-/**
- * @desc envoi mail de bienvenue
- * @func UserPwdForgot
- * @param {string} name - nom de l'utilisateur
- * @param {string} email - adresse mail destinataire
- * @param {string} token - token vérification
- * @return bool - success or failure
- */
+const userPwdForgot = async (name, email, token) => {
+  try {
+    const status = await emailer.sendMail({
+      to: email,
+      subject: `${name} réinitialise ton mot de passe oublié`,
+      template: "passwordForgot",
+      context: {
+        token: token
+      }
+    });
 
-export const userPwdForgot = (name, email, token) => {
-	emailer.sendMail({
-		to: email,
-		subject: "Réinitialisation du mot de passe",
-		template: "forgot",
-		context: {
-			name: name,
-			token: token
-		}
-	}),
-		(err, info) => {
-			if (err) throw err;
-			console.log(info.envelope);
-			console.log(info.messageId);
-		};
+    return status;
+  } catch (err) {
+    console.log(err);
+  }
+
 };
+
+export { userWelcome, userPwdForgot };
