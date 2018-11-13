@@ -21,9 +21,10 @@ const createUser = async (firstname, lastname, email, password) => {
     return { user: firstname };
   } catch (err) {
     throw err;
-    console.error(err);
+    console.error(err.message);
   }
 };
+
 
 /**
  * @desc Récupérer un utilisateur

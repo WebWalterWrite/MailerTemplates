@@ -26,11 +26,12 @@ const userPwdForgot = async (name, email, token) => {
       context: {
         token: token
       }
-    });
+    }); 
 
     return status;
+
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
   }
 
 };

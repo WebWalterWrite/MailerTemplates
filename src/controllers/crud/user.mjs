@@ -18,23 +18,22 @@ const userCreate = async (req, res) => {
 
 	if (errors.length !== 0) return res.status(400).json(errors);
 
-  const isUser = await findUser(req.body.email, 'email', 'firstname');
+	const isUser = await findUser(req.body.email, "email","email");
 
-// Vérifier si email utilisateur existe déjà 
-	if (isUser){
-    let msg= { errors: 'Cet émail existe déjà.' }
-		return res.json(msg); // renvoyer 
-  } 
-// Créer utilisateur
-  else {
-    const { firstname, lastname, email, password } = req.body;
-    const hashed = await hashPwd(password); // hasher le mot de passe
+	// Vérifier si email utilisateur existe déjà
+	if (isUser) {
+		let msg = { errors: "Cet émail existe déjà." };
+		return res.json(msg); // renvoyer
+	}
+	// Créer utilisateur
+	else {
+		const { firstname, lastname, email, password } = req.body;
+		const hashed = await hashPwd(password); // hasher le mot de passe
 
-    createUser(firstname, lastname, email, hashed)
-    .then( user => {
-      userWelcome(firstname, email) // envoyer email de bienvenue
-      res.json(user);
-    })
+		createUser(firstname, lastname, email, hashed).then(user => {
+			userWelcome(firstname, email); // envoyer email de bienvenue
+			res.json(user);
+		});
 	}
 };
 

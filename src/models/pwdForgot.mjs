@@ -18,7 +18,8 @@ const PwdForgot = sequelize.define('resetpwds',{
     },
     dateOfdemand:{
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: Sequelize.NOW
     }
 })
 
