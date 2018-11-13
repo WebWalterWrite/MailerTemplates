@@ -24,7 +24,7 @@ vérifier le champ email
 
 		let msg = {
 			unknow: "une erreur s'est produite, veuillez renouveller votre demande",
-            email: "adresse email inconnue",
+            email: "L'adresse email n'a pas été trouvée",
             sucess: "Un email vient de vous être envoyé"
 		};
 
@@ -47,9 +47,9 @@ vérifier le champ email
 		let key = await token();
 
 		// insérer le token en bdd
-		const isToken = await createEmailToken(email, key);
+		const isToken = await createEmailToken(email);
 
-		if (!isToken) return res.send({ error: msg.unknow });
+		if (!isToken) return res.status(500).json({ error: msg.unknow });
 
 		/* 
 envoyer le mail
@@ -58,9 +58,9 @@ envoyer le mail
 		const isSend = await userPwdForgot(user, email, key);
 
 		// Vérifier si email envoyé
-		if (!isSend) return res.send({ error: msg.unknow });
+		if (!isSend) return res.status(500).json({ error: msg.unknow });
 
-		return res.send({sucess:msg.succes});
+		return res.json({sucess:msg.succes});
 	} catch (e) {
 		throw e;
 		console.log(e.message);
