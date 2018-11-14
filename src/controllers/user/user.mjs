@@ -81,12 +81,14 @@ envoyer le mail
 */
 
 export const pwdInitialize = async (req, res) => {
+try {
     
+
 	/*
 Vérifier si le token est valide
 */
 
-	const { token } = req.params; // récupérer le token depuis l'url
+	let { token } = req.params; // récupérer le token depuis l'url
 	const isToken = await retrieveEmailToken(token); // récupérer le token en bdd
 
 	if (!isToken) return res.status(400).json({ error: "ko" }); // si token invalid
@@ -105,5 +107,10 @@ Vérifier si le token n'a pas expiré (fixé à 2H)
 	/*
   rediriger vers la page de création de nouveau mdp.
 */
-	return res.send("autorisé :)"); // token valide.
+    return res.send("autorisé :)"); // token valide.
+
+} catch (e) {
+    throw e;
+    console.log(e.message);
+}
 };
