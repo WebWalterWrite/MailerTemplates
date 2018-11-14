@@ -16,8 +16,25 @@ const createEmailToken =  async (email, key) =>{
     }
   };
 
+const retrieveEmailToken = async (data) => {
+    try {
+        const token = await PwdForgot.findOne({where:{token:data}});
+        if(token){
+        const { dateOfdemand } = token.dataValues;
+        return dateOfdemand;
+        }
+        return false;
+        
+    } 
+    catch (err) {
+        throw err;
+        console.log(err.message)
+    }
+}
+
 
   
   export {
       createEmailToken,
+      retrieveEmailToken,
   }
