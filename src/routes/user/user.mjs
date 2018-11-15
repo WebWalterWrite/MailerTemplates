@@ -8,7 +8,4 @@ import { userCreate } from '../../controllers/crud/user';
 router.post('/user/create',userCreate);
 
 
-
-
-
 export default router;
