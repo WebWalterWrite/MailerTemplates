@@ -16,7 +16,7 @@ export const validateAccount = (data) => {
   
   let { firstname, lastname, email, password } = data;
 
-  errors.firstname = isValidEmpty(firstname, "prenom", isValidLength);
+  errors.firstname = isValidEmpty(firstname.trim(), "prenom", isValidLength);
 
   errors.lastname = isValidEmpty(lastname, "nom", isValidLength);
 
@@ -24,12 +24,12 @@ export const validateAccount = (data) => {
 
   errors.password = isValidEmpty(password, "mot de passe", isValidLength);
 
-  // Retourne un array de - errors -
-  const Errors = Object.values(errors);
 
-  // La valeur de nos entrées Errors ne doivent pas être undefined
-  const isError = entry => entry !== undefined;
-
-  // Renvoi un array vide ou avec les erreurs
-  return Errors.filter(isError);
+  // Supprimer les propriétés d'objet avec une valeur undefined
+    for(let errorname in errors){
+      if (errors[errorname] === undefined)
+      delete errors[errorname]
+    }
+  // Renvoi un objet avec les erreurs
+  return errors ;
 };
