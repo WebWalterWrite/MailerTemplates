@@ -31,8 +31,10 @@ const userCreate = async (req, res) => {
 		const hashed = await hashPwd(password); // hasher le mot de passe
 
 		createUser(firstname, lastname, email, hashed).then(user => {
+			
 			userWelcome(firstname, email); // envoyer email de bienvenue
-			res.json(user);
+		
+			return res.json({errors:user});
 		});
 	}
 };
