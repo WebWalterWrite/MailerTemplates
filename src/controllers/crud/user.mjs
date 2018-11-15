@@ -15,15 +15,15 @@ import { createUser, findUser } from "../../models/querying/userQuery";
 
 const userCreate = async (req, res) => {
 	const errors = validateAccount(req.body);
-
-	if (errors.length !== 0) return res.status(400).json(errors);
-
-	const isUser = await findUser(req.body.email, "email","email");
+	
+	// Vérifier si une erreur est renvoyée en testant les propriétés de l'objet errors.
+	if (Object.keys(errors).length !== 0) return res.json({ errors: errors });
 
 	// Vérifier si email utilisateur existe déjà
+	 const isUser = await findUser(req.body.email, "email","email");
 	if (isUser) {
-		let msg = { errors: "Cet émail existe déjà." };
-		return res.json(msg); // renvoyer
+		let msg = { msg: "Cet émail existe déjà." };
+		return res.json({errors:msg}); // renvoyer
 	}
 	// Créer utilisateur
 	else {
