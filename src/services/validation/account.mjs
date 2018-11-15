@@ -18,11 +18,11 @@ export const validateAccount = (data) => {
 
   errors.firstname = isValidEmpty(firstname.trim(), "prenom", isValidLength);
 
-  errors.lastname = isValidEmpty(lastname, "nom", isValidLength);
+  errors.lastname = isValidEmpty(lastname.trim(), "nom", isValidLength);
 
-  errors.email = isValidEmpty(email, "email", isValidEmail);
+  errors.email = isValidEmpty(email.trim(), "email", isValidEmail);
 
-  errors.password = isValidEmpty(password, "mot de passe", isValidLength);
+  errors.password = isValidEmpty(password.trim(), "mot de passe", isValidLength);
 
 
   // Supprimer les propriétés d'objet avec une valeur undefined
