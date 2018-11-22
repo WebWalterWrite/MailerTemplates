@@ -12,19 +12,18 @@ import { createUser, findUser } from "../../models/querying/userQuery";
   @param {string} email -parametre de la fonction WelcomeUser
   @param {string} password - parametre de la fonction HashPwd
 */
-const msg = { emailExist:"Cet émail existe déjà."};
+const msg = { emailExist: "Cet émail existe déjà." };
 
 const userCreate = async (req, res) => {
 	const errors = validateAccount(req.body);
-	
+
 	// Vérifier si une erreur est renvoyée en testant les propriétés de l'objet errors.
-	if (Object.keys(errors).length !== 0) return res.json({ error: errors });
+	if (Object.keys(errors).length !== 0) return res.json({ msg: errors });
 
 	// Vérifier si email utilisateur existe déjà
-	 const isUser = await findUser(req.body.email, "email","email");
+	const isUser = await findUser(req.body.email, "email", "email");
 	if (isUser) {
-		
-		return res.json({error:{ emailExist: msg.emailExist}}); // renvoyer
+		return res.json({ msg: { emailExist: msg.emailExist } }); // renvoyer
 	}
 	// Créer utilisateur
 	else {
@@ -32,10 +31,9 @@ const userCreate = async (req, res) => {
 		const hashed = await hashPwd(password); // hasher le mot de passe
 
 		createUser(firstname, lastname, email, hashed).then(user => {
-			
 			userWelcome(firstname, email); // envoyer email de bienvenue
-		
-			return res.json({success:{user:user}});
+
+			return res.json({ msg: user });
 		});
 	}
 };

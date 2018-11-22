@@ -24,7 +24,7 @@ import moment from "moment";
 const msg = {
 	unknow: "une erreur s'est produite, veuillez renouveller votre demande",
 	email: "L'adresse email n'a pas été trouvée",
-	sucess: "Un email vient de vous être envoyé",
+	success: "Un email vient de vous être envoyé",
 	expired: "Le lien de réinitialisation du mot de passe a expiré"
 };
 
@@ -47,17 +47,16 @@ vérifier le champ email
 
 		// vérifier si l'émail existe en bdd
 		if (!ifUser) {
-			return res.json({ error: { email: msg.email } });
+			return res.json({ msg: { noEmail: msg.email } });
 		}
 
 		// Générer un token
 		let key = await token();
 
 		// insérer le token en bdd
-		const isToken = await createEmailToken(email);
+		const isToken = await createEmailToken(email, key);
 
-		if (!isToken)
-			return res.status(500).json({ error: { unknow: msg.unknow } });
+		if (!isToken) return res.status(500).json({ msg: { unknow: msg.unknow } });
 
 		/* 
 envoyer le mail
@@ -66,9 +65,9 @@ envoyer le mail
 		const isSend = await userPwdForgot(user, email, key);
 
 		// Vérifier si email envoyé
-		if (!isSend) return res.status(500).json({ error: { unknow: msg.unknow } });
+		if (!isSend) return res.status(500).json({ msg: { unknow: msg.unknow } });
 
-		return res.json({ sucess: msg.succes });
+		return res.json({ msg: { email: msg.success } });
 	} catch (e) {
 		throw e;
 		console.log(e.message);
@@ -88,7 +87,6 @@ export const pwdInitialize = async (req, res) => {
 		/*
 Vérifier si le token est valide
 */
-
 		let { token } = req.params; // récupérer le token depuis l'url
 		const isToken = await retrieveEmailToken(token); // récupérer le token en bdd
 
@@ -97,13 +95,13 @@ Vérifier si le token est valide
 		/*
 Vérifier si le token n'a pas expiré (fixé à 2H)
 */
-
 		let tokenDate = moment(isToken);
 		let currentDate = moment(new Date());
 		let duration = moment.duration(currentDate.diff(tokenDate));
 		let limitDate = duration.asHours();
 
-		if (limitDate > 2) return res.status(403).json({ err: msg.expired }); // si token expiré
+		if (limitDate > 2)
+			return res.status(403).json({ msg: { err: msg.expired } }); // si token expiré
 
 		/*
   rediriger vers la page de création de nouveau mdp.
