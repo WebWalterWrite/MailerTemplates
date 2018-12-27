@@ -1,1 +1,166 @@
-<h1>Email test {{ name }}</h1>
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="x-apple-disable-message-reformating" />
+    <meta name="format-detection" content="telephone=3Dno">
+    <meta name=3D"format-detection" content=3D"email=3Dno" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style type="text/css">
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            display: flex;
+            justify-content: center;
+        }
+
+        center {
+            margin: 0 auto;
+        }
+
+        table {
+            
+            width: 700px;
+            background-color: #272C33;
+            border: solid 2px black;
+        }
+
+        .header {
+            border-bottom: solid 1px #FFFFFF;
+        }
+
+        h1 {
+            color: rgb(97, 218, 251);
+            padding: 10px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        h2,
+        p {
+            color: #FFFFFF;
+        }
+
+        p {
+            text-align: justify;
+            padding: 10px;
+            line-height: 1.5;
+            font-size:14px;
+        }
+
+        .link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0 10px 0;
+        }
+
+        .link div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60%;
+            background-color: rgb(97, 218, 251);
+            padding: 13px;
+            border-bottom: solid 1px black;
+        }
+
+        .link a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        ._linkform {
+            text-align: center;
+            padding: 13px;
+            border-top: solid 1px white;
+        }
+
+        ._linkform a {
+            color: white;
+        }
+
+        @media screen and (max-width: 480px){
+            h1{
+                font-size:48px !important;
+                font-size:18vw;
+            }
+            p,a{
+                font-size:8vw !important;
+                font-size:24px !important;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <center>
+        <table cellspacing="0" cellpadding="0">
+            <tbody>
+            <tr>
+                <td class="header">
+                    <h1>HooksForm</h1>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h2>Bienvenue {{ name }}</h2>
+                </td>
+            </tr>
+            <!--
+            texte de bienvenue
+            -->
+            <tr>
+                <td>
+                    <p>Ton inscription a bien été prise en compte<br />
+                        Pour en savoir plus sur ce projet, tu trouveras ci-dessous les liens pour accèder au repository
+                        GitHub.</p>
+                </td>
+            </tr>
+            <!--
+            Liens vers repos github
+            -->
+
+            <tr>
+                <td class="link">
+                    <div>
+                        <img width="32" height="32" src="https://camo.githubusercontent.com/7710b43d0476b6f6d4b4b2865e35c108f69991f3/68747470733a2f2f7777772e69636f6e66696e6465722e636f6d2f646174612f69636f6e732f6f637469636f6e732f313032342f6d61726b2d6769746875622d3235362e706e67"
+                            alt="github">
+                        <a href="https://github.com/WebWalterWrite/HooksForm">=>Repository Front REACT</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="link">
+                    <div>
+                        <img width="32" height="32" src="https://camo.githubusercontent.com/7710b43d0476b6f6d4b4b2865e35c108f69991f3/68747470733a2f2f7777772e69636f6e66696e6465722e636f6d2f646174612f69636f6e732f6f637469636f6e732f313032342f6d61726b2d6769746875622d3235362e706e67"
+                            alt="github">
+                        <a href="https://github.com/WebWalterWrite/HooksForm">=>Repository Back NodeJS</a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="_linkform">
+                        <a href="#">Accéder aux formulaires</a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+    </center>
+</body>
+
+</html>
