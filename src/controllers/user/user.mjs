@@ -106,7 +106,7 @@ Vérifier si le token n'a pas expiré (fixé à 2H)
 		/*
   rediriger vers la page de création de nouveau mdp.
 */
-		return res.send("autorisé :)"); // token valide.
+		return res.redirect("http://localhost:3000/formulaire/nouveau-mot-de-passe"); // token valide.
 	} catch (e) {
 		throw e;
 		console.log(e.message);

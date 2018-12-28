@@ -24,7 +24,8 @@ const userPwdForgot = async (name, email, token) => {
       subject: `${name} réinitialise ton mot de passe oublié`,
       template: "passwordForgot",
       context: {
-        token: token
+        name: name,
+        token: token,
       }
     }); 
 

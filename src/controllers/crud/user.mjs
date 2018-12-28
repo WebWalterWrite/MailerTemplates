@@ -12,11 +12,11 @@ import { createUser, findUser } from "../../models/querying/userQuery";
   @param {string} email -parametre de la fonction WelcomeUser
   @param {string} password - parametre de la fonction HashPwd
 */
-const msg = { emailExist: "Cet émail existe déjà." };
+const msg = { emailExist: "Cet émail est déjà utilisé." };
 
 const userCreate = async (req, res) => {
 	const errors = validateAccount(req.body);
-
+	console.log(errors)
 	// Vérifier si une erreur est renvoyée en testant les propriétés de l'objet errors.
 	if (Object.keys(errors).length !== 0) return res.json({ msg: errors });
 
