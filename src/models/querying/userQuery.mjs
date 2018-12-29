@@ -36,7 +36,6 @@ const createUser = async (firstname, lastname, email, password) => {
  */
 
 const findUser = async (data, field, target) => {
-  console.log(data);
   try {
     const user = await User.findOne({
       where: { [field]: data },
@@ -54,4 +53,21 @@ const findUser = async (data, field, target) => {
   }
 };
 
-export { createUser, findUser };
+
+const updateUser = async (email, password) => {
+
+  console.log('updateUser function', email, password)
+  const user = await User.update({
+    password: password
+  },{
+    where:{email:email},
+    attributes: 'firstname'
+  }
+  ).then((updateUser)=>{
+    return updateUser;
+  })
+  console.log(user)
+  return user;
+
+}
+export { createUser, findUser, updateUser };
