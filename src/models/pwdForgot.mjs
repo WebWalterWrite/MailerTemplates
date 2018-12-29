@@ -8,6 +8,10 @@ const PwdForgot = sequelize.define('resetpwds',{
         autoIncrement: true,
         primaryKey: true
     },
+    user:{
+        type: Sequelize.STRING,
+        allowNull: false
+    },
     email:{
         type: Sequelize.STRING,
         allowNull: false
