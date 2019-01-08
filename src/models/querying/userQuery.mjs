@@ -35,16 +35,15 @@ const createUser = async (firstname, lastname, email, password) => {
  * @return {boolean} - true or false
  */
 
-const findUser = async (data, field, target) => {
-  console.log(data);
+const findUser = async (data, field, ...attr) => {
+ 
   try {
     const user = await User.findOne({
       where: { [field]: data },
-      attributes: [target]
+      attributes: attr.length > 0 ? attr : [field]
     });
     if (user) {
-      const { firstname } = user.dataValues;
-      return { user: firstname };
+      return { user: user.dataValues };
     } else {
       return false;
     }
