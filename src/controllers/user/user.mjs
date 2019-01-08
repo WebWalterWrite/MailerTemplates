@@ -1,12 +1,62 @@
 import { userPwdForgot } from "../../services/mail/sendmail/sendmail";
 import { findUser } from "../../models/querying/userQuery";
 import {
-	createEmailToken,
-	retrieveEmailToken
+  createEmailToken,
+  retrieveEmailToken
 } from "../../models/querying/tokenQuery";
 import { token } from "../../services/crypt/token";
 import { isValidEmail } from "../../services/validation/validation";
+import { comparePwd } from "../../services/crypt/bcrypt";
 import moment from "moment";
+
+const msg = {
+  unknow: "une erreur s'est produite, veuillez renouveller votre demande",
+  email: "L'adresse email n'a pas été trouvée",
+  success: "Un email vient de vous être envoyé",
+  logged:"Vous vous êtes bien connecté",
+  expired: "Le lien de réinitialisation du mot de passe a expiré"
+};
+
+/**
+ * @desc signIn - Traite la demande de connexion de l'utilisateur
+ * @func isValidEmail - vérifie que le format email est valide
+ * @func findUser - vérifie que le user existe via l'adresse email, récupére le mdp en bdd
+ * @func comparePwd - vérifie que le mot de passe saisi correspond en bdd
+ * @param {object} req.body - contient le contenu email et password
+ */
+
+export const signIn = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    /*
+Vérifier le format du champ email
+*/
+    let isValid = await isValidEmail(email, "email");
+
+    if (isValid) return res.json(isValid);
+
+    /* 
+Vérifier si le user existe
+*/
+    const ifUser = await findUser(email, "email");
+    if (!ifUser) return res.json({ msg: { noEmail: msg.email } });
+
+    /*
+Récupérer le mot de passe lié à l'adresse Email
+*/
+	const userPass = await findUser(email,"email", "password");
+	const { user } = userPass;
+	const ifPassword = await comparePwd(password, user.password);
+
+	  res.json({msg: { logged: msg.logged }})
+  } catch (e) {
+    throw e;
+    console.log(e.message);
+  }
+};
+
+
+
 
 /**
   @desc Renvoi un email suite à une demande de réinitialisation de mot de passe
@@ -21,57 +71,50 @@ import moment from "moment";
   @param {string} key - parametre de la fonction token
 */
 
-const msg = {
-	unknow: "une erreur s'est produite, veuillez renouveller votre demande",
-	email: "L'adresse email n'a pas été trouvée",
-	success: "Un email vient de vous être envoyé",
-	expired: "Le lien de réinitialisation du mot de passe a expiré"
-};
-
 export const pwdForgot = async (req, res) => {
-	try {
-		/*
+  try {
+    /*
 vérifier le champ email
 */
-		let { email } = req.body;
-		console.log(email);
-		let isValid = await isValidEmail(email, "email");
+    let { email } = req.body;
+    console.log(email);
+    let isValid = await isValidEmail(email, "email");
 
-		// Vérifier si il y a une erreur
-		if (isValid) return res.json(isValid);
+    // Vérifier si il y a une erreur
+    if (isValid) return res.json(isValid);
 
-		/*
+    /*
  Rechercher user en bdd
 */
-		const ifUser = await findUser(email, "email", "firstname");
+    const ifUser = await findUser(email, "email", "firstname");
 
-		// vérifier si l'émail existe en bdd
-		if (!ifUser) {
-			return res.json({ msg: { noEmail: msg.email } });
-		}
+    // vérifier si l'émail existe en bdd
+    if (!ifUser) {
+      return res.json({ msg: { noEmail: msg.email } });
+    }
 
-		// Générer un token
-		let key = await token();
+    // Générer un token
+    let key = await token();
 
-		// insérer le token en bdd
-		const isToken = await createEmailToken(email, key);
+    // insérer le token en bdd
+    const isToken = await createEmailToken(email, key);
 
-		if (!isToken) return res.status(500).json({ msg: { unknow: msg.unknow } });
+    if (!isToken) return res.status(500).json({ msg: { unknow: msg.unknow } });
 
-		/* 
+    /* 
 envoyer le mail
  */
-		let { user } = ifUser;
-		const isSend = await userPwdForgot(user, email, key);
+    let { user } = ifUser;
+    const isSend = await userPwdForgot(user, email, key);
 
-		// Vérifier si email envoyé
-		if (!isSend) return res.status(500).json({ msg: { unknow: msg.unknow } });
+    // Vérifier si email envoyé
+    if (!isSend) return res.status(500).json({ msg: { unknow: msg.unknow } });
 
-		return res.json({ msg: { email: msg.success } });
-	} catch (e) {
-		throw e;
-		console.log(e.message);
-	}
+    return res.json({ msg: { email: msg.success } });
+  } catch (e) {
+    throw e;
+    console.log(e.message);
+  }
 };
 
 /**
@@ -83,32 +126,34 @@ envoyer le mail
 */
 
 export const pwdInitialize = async (req, res) => {
-	try {
-		/*
+  try {
+    /*
 Vérifier si le token est valide
 */
-		let { token } = req.params; // récupérer le token depuis l'url
-		const isToken = await retrieveEmailToken(token); // récupérer le token en bdd
+    let { token } = req.params; // récupérer le token depuis l'url
+    const isToken = await retrieveEmailToken(token); // récupérer le token en bdd
 
-		if (!isToken) return res.status(400).json({ error: "ko" }); // si token invalid
+    if (!isToken) return res.status(400).json({ error: "ko" }); // si token invalid
 
-		/*
+    /*
 Vérifier si le token n'a pas expiré (fixé à 2H)
 */
-		let tokenDate = moment(isToken);
-		let currentDate = moment(new Date());
-		let duration = moment.duration(currentDate.diff(tokenDate));
-		let limitDate = duration.asHours();
+    let tokenDate = moment(isToken);
+    let currentDate = moment(new Date());
+    let duration = moment.duration(currentDate.diff(tokenDate));
+    let limitDate = duration.asHours();
 
-		if (limitDate > 2)
-			return res.status(403).json({ msg: { err: msg.expired } }); // si token expiré
+    if (limitDate > 2)
+      return res.status(403).json({ msg: { err: msg.expired } }); // si token expiré
 
-		/*
+    /*
   rediriger vers la page de création de nouveau mdp.
 */
-		return res.redirect("http://localhost:3000/formulaire/nouveau-mot-de-passe"); // token valide.
-	} catch (e) {
-		throw e;
-		console.log(e.message);
-	}
+    return res.redirect(
+      "http://localhost:3000/formulaire/nouveau-mot-de-passe"
+    ); // token valide.
+  } catch (e) {
+    throw e;
+    console.log(e.message);
+  }
 };
