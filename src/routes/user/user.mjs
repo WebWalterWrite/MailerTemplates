@@ -1,5 +1,6 @@
 import router from '../config';
 import { userCreate } from '../../controllers/crud/user';
+import { signIn } from '../../controllers/user/user';
 
 
 /**
@@ -7,5 +8,6 @@ import { userCreate } from '../../controllers/crud/user';
 */
 router.post('/user/create',userCreate);
 
+router.post('/user/signin', signIn)
 
 export default router;
