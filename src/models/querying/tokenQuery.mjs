@@ -1,9 +1,10 @@
 import PwdForgot from '../pwdForgot';
 
 
-const createEmailToken =  async (email, key) =>{
+const createEmailToken =  async (email, key, user) =>{
     try{
       const token = await PwdForgot.create({
+          user:user,
           email:email,
           token:key,
         })

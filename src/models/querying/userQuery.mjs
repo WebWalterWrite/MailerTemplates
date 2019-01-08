@@ -53,4 +53,21 @@ const findUser = async (data, field, ...attr) => {
   }
 };
 
-export { createUser, findUser };
+
+const updateUser = async (email, password) => {
+
+  console.log('updateUser function', email, password)
+  const user = await User.update({
+    password: password
+  },{
+    where:{email:email},
+    attributes: 'firstname'
+  }
+  ).then((updateUser)=>{
+    return updateUser;
+  })
+  console.log(user)
+  return user;
+
+}
+export { createUser, findUser, updateUser };
