@@ -3,7 +3,9 @@ import { findUser, updateUser } from "../../models/querying/userQuery";
 import { hashPwd } from "../../services/crypt/bcrypt.mjs";
 import {
   createEmailToken,
-  retrieveEmailToken
+  retrieveEmailToken,
+  retrieveEmail,
+  updateToken
 } from "../../models/querying/tokenQuery";
 import { token } from "../../services/crypt/token";
 import { isValidEmail } from "../../services/validation/validation";
@@ -72,53 +74,64 @@ Récupérer le mot de passe lié à l'adresse Email
   @param {string} email -parametre de la fonction WelcomeUser
   @param {string} key - parametre de la fonction token
 */
-
-
 export const pwdForgot = async (req, res) => {
   try {
-    /*
+        /*
 vérifier le champ email
 */
-		let { email } = req.body;
+        let { email } = req.body;
+        let isValid = await isValidEmail(email, "email");
+        if (isValid) return res.json(isValid); // Vérifier si il y a une erreur
 
-		let isValid = await isValidEmail(email, "email");
-
-    // Vérifier si il y a une erreur
-    if (isValid) return res.json(isValid);
-
-    /*
- Rechercher user en bdd
+        /*
+ Rechercher user en bdd (users table)
 */
-    const ifUser = await findUser(email, "email", "firstname");
+        const ifUser = await findUser(email, "email", "firstname"); // Chercher le user
 
-		// vérifier si l'émail existe en bdd
-		if (!ifUser) {
-			return res.json({ msg: { email: msg.email } });
-		}
+        if (!ifUser) return res.json({ msg: { email: msg.email } }); // vérifier si l'émail existe en bdd
 
-		// Générer un token
-		let key = await token();
-		let { user } = ifUser;
-		console.log(user)
-		// insérer le token en bdd
-		const isToken = await createEmailToken(email, key, user);
+        let { user: { firstname } } = ifUser; // Extraire le prénom
 
-    if (!isToken) return res.status(500).json({ msg: { unknow: msg.unknow } });
+        let key = await token(); // Générer un token
 
-    /* 
-envoyer le mail
- */
-		
-		const isSend = await userPwdForgot(user, email, key);
+        /*
+   Vérifier si une demande n'a pas déjà été demandée via l'email avant le délai d'expiration :
+    - Si non, on continue le process (enregistrer user & token, envoi de mail)
+	  - Si oui, on modifie le token par un nouveau
+*/
+        const isDemand = await retrieveEmail(email); // Rechercher user en bdd (resetpwds table).
 
-    // Vérifier si email envoyé
-    if (!isSend) return res.status(500).json({ msg: { unknow: msg.unknow } });
+        // Enregistrer la demande de réinitialisation
+        if (!isDemand) {
+          const isToken = await createEmailToken(email, key, firstname); // insérer le token en bdd
+          if (!isToken) 
+            return res
+                  .status(500)
+                  .json({ msg: { unknow: msg.unknow } });
+        }
+        // Remplacer le token le token
+        else{
+          const newToken = await updateToken(email, key);
+          if (!newToken)
+            return res
+              .status(500)
+              .json({ msg: { unknow: msg.unknow } });
+        }
+ 
+        // Envoi du mail
+         const isSend = await userPwdForgot(firstname, email, key); 
+         if (!isSend) 
+            return res
+                  .status(500)
+                  .json({ msg: { unknow: msg.unknow } }); // Vérifier si email envoyé
 
-		return res.json({ msg: { success: msg.success } });
-	} catch (e) {
-		throw e;
-		console.log(e.message);
-	}
+        return res.json({ msg: { success: msg.success } }); // Affiché le message côté front
+  }
+	catch (e) {
+			throw e;
+			console.log(e.message);
+  }
+  
 };
 
 /**
@@ -135,9 +148,8 @@ export const pwdInitialize = async (req, res) => {
 Vérifier si le token est valide
 */
 		let { token } = req.params; // récupérer le token depuis l'url
-		const { dateOfdemand } = await retrieveEmailToken(token); // récupérer le token en bdd
-		
-		if (!dateOfdemand) return res.status(400).json({ error: "ko" }); // si token invalid
+		const dateOfdemand  = await retrieveEmailToken(token); // récupérer la date de demande si token existe en bdd
+		if (!dateOfdemand) return res.status(400).json({ error: "Le token n'est pas valide" }); // si token invalid, retourner une erreur
 
     /*
 Vérifier si le token n'a pas expiré (fixé à 2H)
@@ -148,7 +160,9 @@ Vérifier si le token n'a pas expiré (fixé à 2H)
 		let limitDate = duration.asHours();
 
     if (limitDate > 2)
-      return res.status(403).json({ msg: { err: msg.expired } }); // si token expiré
+      return res
+            .status(403)
+            .json({ msg: { err: msg.expired } }); // si token expiré
 
     /*
   rediriger vers la page de création de nouveau mdp.
@@ -162,28 +176,39 @@ Vérifier si le token n'a pas expiré (fixé à 2H)
 
 
 /**
+ @desc - Modifier le mot de passe :
+        - Récupérer le user depuis le token
+        - Modifier le mot de passe en bdd
+        - Envoyer un email de confirmation
  @func newPwdSave - Enregistrer le nouveau mot de passe
- @param {string} password - Le nouveau mot de passe
  */
 
  export const newPwdSave = async (req, res) => {
+  try{
+  const { token, password } = req.body; // Extraire le token et mot de passe formulaire
+  
+	const { email, user } = await retrieveEmailToken(token); // Récupérer l'adresse mail
 
-	const { token, password } = req.body;
-
-	// Récupérer l'adresse mail
-	const { email, user } = await retrieveEmailToken(token);
-
-	// hasher le nouveau mot de passe
 	const hashed = await hashPwd(password);  // hasher le mot de passe
 	
-	if (!hashed) return res.status(500).json({ msg: { unknow: msg.unknow } });
+  if (!hashed) 
+    return res
+          .status(500)
+          .json({ msg: { unknow: msg.unknow } });
 
 	// Modifier l'ancien mot de passe par le nouveau
 	const updated = await updateUser(email, hashed);
-	if (!updated) return res.status(500).json({ msg: { unknow: msg.unknow } });
+  if (!updated) 
+    return res
+          .status(500)
+          .json({ msg: { unknow: msg.unknow } });
 
 	const name = `${user.charAt(0).toUpperCase()}${user.slice(1)}`
 
 	res.send({ msg: { success: `Merci ${name}${msg.successmdp}` } })
-
+  }
+  catch(err){
+    throw err
+    console.log(error)
+  }
  }
