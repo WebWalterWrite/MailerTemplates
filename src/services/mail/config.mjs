@@ -21,6 +21,8 @@ oAuth2Client.setCredentials({
 const accesstoken = oAuth2Client.getRequestHeaders();
 
 
+
+
 /**
  * @property {object} credentials - identifiants api-gmail
  * @property {string} credentials.type - type d'authentification
@@ -32,12 +34,13 @@ const accesstoken = oAuth2Client.getRequestHeaders();
  */
 
 const credentials = {
-    type: 'oAuth2',
+    type: 'OAuth2',
     user:USER_EMAIL,
     clientId:USER_ID,
     clientSecret:USER_SECRET,
     refreshToken:USER_REFRESH_TOKEN,
-    accessToken:accesstoken
+    accessToken:accesstoken,
+
 };
 
 
