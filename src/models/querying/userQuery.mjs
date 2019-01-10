@@ -56,7 +56,7 @@ const findUser = async (data, field, ...attr) => {
 
 const updateUser = async (email, password) => {
 
-  console.log('updateUser function', email, password)
+  try{
   const user = await User.update({
     password: password
   },{
@@ -68,6 +68,11 @@ const updateUser = async (email, password) => {
   })
   console.log(user)
   return user;
+}
+catch(err){
+  throw err
+  console.log(err.message)
+}
 
 }
 export { createUser, findUser, updateUser };
