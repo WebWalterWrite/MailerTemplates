@@ -18,6 +18,7 @@ const userWelcome = (name, email) => {
 };
 
 const userPwdForgot = async (name, email, token) => {
+  console.log(name, email, token)
   try {
     const status = await emailer.sendMail({
       to: email,
@@ -32,7 +33,7 @@ const userPwdForgot = async (name, email, token) => {
     return status;
 
   } catch (err) {
-    console.log(err.message);
+    console.log('gmail erreur', err);
   }
 
 };
