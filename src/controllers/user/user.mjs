@@ -18,7 +18,8 @@ const msg = {
 	email: "L'adresse email n'a pas été trouvée",
 	success: "Un email vient de vous être envoyé",
 	successmdp: " ,votre mot de passe a bien été modifié",
-	logged:"Vous vous êtes bien connecté",
+  logged:"Vous vous êtes bien connecté",
+  nologged:"Le mot de passe est incorrect",
 	expired: "Le lien de réinitialisation du mot de passe a expiré"
 };
 
@@ -37,7 +38,7 @@ export const signIn = async (req, res) => {
     /*
 Vérifier le format du champ email
 */
-    let isValid = await isValidEmail(email, "email");
+    const isValid = await isValidEmail(email, "email");
 
     if (isValid) return res.json(isValid);
 
@@ -45,17 +46,23 @@ Vérifier le format du champ email
 Vérifier si le user existe
 */
     const ifUser = await findUser(email, "email");
-    if (!ifUser) return res.json({ msg: { noEmail: msg.email } });
+    if (!ifUser.email) return res.json({ msg: { error: msg.email } });
 
     /*
 Récupérer le mot de passe lié à l'adresse Email
 */
-	const userPass = await findUser(email,"email", "password");
-	const { user } = userPass;
-	const ifPassword = await comparePwd(password, user.password);
-
-	  res.json({msg: { logged: msg.logged }})
-  } catch (e) {
+  const userPass = await findUser(email,"email", "password");
+  
+  const ifPassword = await comparePwd(password, userPass.password);
+  
+  if(!ifPassword) return res.json({ msg: { error: msg.nologged } });
+  
+  /*
+  Si aucune erreur, envoi message de succès
+  */
+  return res.json({msg: { success: msg.logged }})
+  }
+   catch (e) {
     throw e;
     console.log(e.message);
   }
@@ -88,7 +95,7 @@ vérifier le champ email
 */
         const ifUser = await findUser(email, "email", "firstname"); // Chercher le user
 
-        if (!ifUser) return res.json({ msg: { email: msg.email } }); // vérifier si l'émail existe en bdd
+        if (!ifUser) return res.json({ msg: { error: msg.email } }); // vérifier si l'émail existe en bdd
 
         let { user: { firstname } } = ifUser; // Extraire le prénom
 
@@ -107,7 +114,7 @@ vérifier le champ email
           if (!isToken) 
             return res
                   .status(500)
-                  .json({ msg: { unknow: msg.unknow } });
+                  .json({ msg: { error: msg.unknow } });
         }
         // Remplacer le token le token
         else{
@@ -115,7 +122,7 @@ vérifier le champ email
           if (!newToken)
             return res
               .status(500)
-              .json({ msg: { unknow: msg.unknow } });
+              .json({ msg: { error: msg.unknow } });
         }
  
         // Envoi du mail
@@ -123,7 +130,7 @@ vérifier le champ email
          if (!isSend) 
             return res
                   .status(500)
-                  .json({ msg: { unknow: msg.unknow } }); // Vérifier si email envoyé
+                  .json({ msg: { error: msg.unknow } }); // Vérifier si email envoyé
 
         return res.json({ msg: { success: msg.success } }); // Affiché le message côté front
   }
@@ -162,7 +169,7 @@ Vérifier si le token n'a pas expiré (fixé à 2H)
     if (limitDate > 2)
       return res
             .status(403)
-            .json({ msg: { err: msg.expired } }); // si token expiré
+            .json({ msg: { error: msg.expired } }); // si token expiré
 
     /*
   rediriger vers la page de création de nouveau mdp.
@@ -194,14 +201,14 @@ Vérifier si le token n'a pas expiré (fixé à 2H)
   if (!hashed) 
     return res
           .status(500)
-          .json({ msg: { unknow: msg.unknow } });
+          .json({ msg: { error: msg.unknow } });
 
 	// Modifier l'ancien mot de passe par le nouveau
 	const updated = await updateUser(email, hashed);
   if (!updated) 
     return res
           .status(500)
-          .json({ msg: { unknow: msg.unknow } });
+          .json({ msg: { error: msg.unknow } });
 
 	const name = `${user.charAt(0).toUpperCase()}${user.slice(1)}`
 
